@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 3be1917e103334a0d7dfa4ebe642dd44
+  m_Shader: {fileID: -6465566751694194690, guid: 5abac6c20809f4a47a4405c17dfa7828, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - PK_HAS_EMISSIVE_NONE
+  - PK_HAS_SKELETAL_ANIM_INTERPOL
+  - _ALPHATEST_ON
+  m_InvalidKeywords:
+  - PK_HAS_DIFFUSE_MAP
+  - PK_HAS_DIFFUSE_MAP_ON
+  - PK_HAS_EMISSIVE_NONE_ON
+  - PK_HAS_LIGHTING
+  - PK_HAS_LIGHTING_ON
+  - PK_HAS_SKELETAL_ANIM
+  - PK_HAS_SKELETAL_ANIM_INTERPOL_ON
+  - PK_HAS_SKELETAL_ANIM_ON
+  - PK_HAS_VAT_NONE
+  - PK_HAS_VAT_NONE_ON
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: -1
+  stringTagMap:
+    RenderType: TransparentCutout
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AlphaMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AtlasRects:
+        m_Texture: {fileID: 2800000, guid: 1b4bc075356d94643841eddfa3f9e466, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DiffuseRampMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissiveRampMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 6015854595a750346ac5adcd0ae7a575, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: 7c2a0f13a34a643449946dc86a31368f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SkeletalAnimTexture:
+        m_Texture: {fileID: 2800000, guid: 849cd448ae2068145b99e3694af4df86, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - PK_HAS_ALPHA_REMAP: 0
+    - PK_HAS_DIFFUSE_RAMP: 0
+    - PK_HAS_EMISSIVE: 0
+    - PK_HAS_SKELETAL_ANIM_BONES_SCALE: 0
+    - PK_HAS_SKELETAL_ANIM_INTERPOL: 1
+    - PK_HAS_SKELETAL_ANIM_INTERPOL_TRACKS: 0
+    - _AlphaClip: 1
+    - _AlphaCursor: 0
+    - _AlphaToMask: 1
+    - _AtlasId: 0
+    - _Blend: 2
+    - _BlendModePreserveSpecular: 1
+    - _CastShadows: 1
+    - _Cull: 0
+    - _CutOutAlpha: 0
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
+    - _Metalness: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _ReceiveShadows: 1
+    - _Roughness: 1
+    - _SkeletalAnimCount: 2
+    - _SkeletalAnimCursor0: 0
+    - _SkeletalAnimCursor1: 0
+    - _SkeletalAnimIdx0: 0
+    - _SkeletalAnimIdx1: 0
+    - _SkeletalAnimTransition: 0
+    - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZTest: 4
+    - _ZWrite: 1
+    - _ZWriteControl: 0
+    m_Colors:
+    - _BaseColor: {r: 1, g: 0, b: 0.7391076, a: 0}
+    - _EmissiveColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SkeletalAnimTextureResol: {r: 16, g: 228, b: 0, a: 0}
+    - _SkeletalAnimTranslationBoundsMax: {r: 1.674398, g: 2.159097, b: 2.659523, a: 0}
+    - _SkeletalAnimTranslationBoundsMin: {r: -1.874809, g: -1.299607, b: -0.632826, a: 0}
+    - _SkeletalMeshTransform0: {r: 0, g: 0, b: 0, a: 0}
+    - _SkeletalMeshTransform1: {r: 0, g: 0, b: 0, a: 0}
+    - _SkeletalMeshTransform2: {r: 0, g: 0, b: 0, a: 0}
+    - _SkeletalMeshTransform3: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &5121666218939127084
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Editor::UnityEditor.Rendering.Universal.AssetVersion
+  version: 10
