@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.4dviews.4dsplayer": {
+      "version": "file:com.4dviews.4dsplayer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.timeline": "1.7.6",
+        "com.unity.burst": "1.8.18"
+      }
+    },
     "com.persistant-studios.popcornfx": {
       "version": "file:../../../com.persistant-studios.popcornfx",
       "depth": 0,
@@ -45,7 +54,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.10.1",
+      "version": "2.10.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
