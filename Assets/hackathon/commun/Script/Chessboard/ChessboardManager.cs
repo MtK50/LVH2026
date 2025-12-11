@@ -1,0 +1,46 @@
+using NUnit.Framework;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ChessboardManager : MonoBehaviour
+{
+    [SerializeField] public List<ChessTile> chessTiles = new List<ChessTile>();
+    [SerializeField] public List<ChessPiece> chessPieces = new List<ChessPiece>();
+
+    [SerializeField] public Transform chessPiecesParent;
+
+    [SerializeField] private ChessPiece currentChessPiece;
+
+
+    private void Start()
+    {
+
+        foreach(Transform child in transform)
+        {
+            ChessTile tile = child.GetComponent<ChessTile>();
+            if (tile != null)
+            {
+                // This is a 5x5 chessboard, each tile is named as "SM_Tile*" (from 0 to 24);
+                int index = int.Parse(child.name.Replace("SM_Tile", ""));
+                int x = index % 5;
+                int y = index / 5;
+                tile.Initialize(x, y);
+                chessTiles.Add(tile);
+            }
+        }
+        foreach(Transform child in chessPiecesParent)
+        {
+            ChessPiece piece = child.GetComponent<ChessPiece>();
+            if (piece != null)
+            {
+                piece.Initialize();
+                chessPieces.Add(piece);
+            }
+        }
+    }
+
+    public void SetCurrentChessPiece(ChessPiece piece)
+    {
+        currentChessPiece = piece;
+    }
+}

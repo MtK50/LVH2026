@@ -4,8 +4,8 @@
   <Project Path="Unity.PopcornFX.Editor.csproj" />
   <Project Path="Unity.PopcornFX.Samples.Runtime.csproj" />
   <Project Path="4DViews.4DSPlayer.Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.PopcornFX.URP.csproj" />
   <Project Path="Oculus.Haptics.Samples.csproj" />
   <Project Path="4DViews.4DSPlayer.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
 </Solution>
