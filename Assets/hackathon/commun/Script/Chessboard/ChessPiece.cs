@@ -21,6 +21,9 @@ public enum PieceTeam
 public class ChessPiece : MonoBehaviour
 {
     [Header("Chess Piece Settings")]
+    public Vector2 boardPosition;
+
+
     [Tooltip("Automaticaly defined")]
     public string pieceName;
     [Tooltip("Automaticaly defined")]
@@ -39,5 +42,7 @@ public class ChessPiece : MonoBehaviour
         piece4DS = GetComponentInChildren<unity4dv.Plugin4DS>();
         Debug.Log(piece4DS.SequenceName);
     }
+
+
 
 }

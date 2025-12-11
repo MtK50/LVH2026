@@ -9,7 +9,7 @@ public class ChessboardManager : MonoBehaviour
 
     [SerializeField] public Transform chessPiecesParent;
 
-    [SerializeField] private ChessPiece currentChessPiece;
+    private ChessPiece currentChessPiece;
 
 
     private void Start()
@@ -43,4 +43,30 @@ public class ChessboardManager : MonoBehaviour
     {
         currentChessPiece = piece;
     }
+
+    public void UpdateChessPiecePosition(ChessPiece piece)
+    {
+        if(piece.pieceName == "null")
+        {
+            return;
+        }
+        // The lowest distance tile of all chessTiles is considered the current tile of the piece
+        float minDistance = float.MaxValue;
+        ChessTile closestTile = null;
+        foreach (ChessTile tile in chessTiles)
+        {
+            float distance = Vector3.Distance(piece.transform.position, tile.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestTile = tile;
+            }
+        }
+        if (closestTile != null)
+        {
+            piece.boardPosition = closestTile.position;
+            Debug.Log($"Chess Piece {piece.pieceName} is now on tile ({closestTile.position.x}, {closestTile.position.y})");
+        }
+    }
+
 }
