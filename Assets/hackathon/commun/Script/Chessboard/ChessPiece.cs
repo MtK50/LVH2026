@@ -1,9 +1,5 @@
 using Array2DEditor;
-using Oculus.Platform.Models;
-using TreeEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEngine.Rendering.ProbeAdjustmentVolume;
 
 public enum PieceType
 {
@@ -25,124 +21,219 @@ public enum PieceTeam
 
 public class ChessPiece : MonoBehaviour
 {
+    #region Serialized Fields
     [Header("Chess Piece Settings")]
     public bool isSelectedToMove = false;
     public Vector2 boardPosition;
     public GameObject debugCube;
+
     [Space(10)]
-    // Create a 5x5 matrix of bool to represent possible moves
     [SerializeField] private Array2DBool movementShape = null;
     [SerializeField] private Array2DBool attackShape = null;
 
-
     [Space(10)]
-
-
-    [Tooltip("Automaticaly defined")]
+    [Tooltip("Automatically defined")]
     public string pieceName;
-    [Tooltip("Automaticaly defined")]
+    [Tooltip("Automatically defined")]
     public unity4dv.Plugin4DS piece4DS;
+
     [Space(10)]
     [Tooltip("Manually defined")]
     public PieceType pieceType;
     [Tooltip("Manually defined")]
     public PieceTeam pieceTeam;
+    #endregion
 
-
+    #region Initialization
     public void Initialize()
     {
-        debugCube.GetComponent<Renderer>().material.color = (pieceTeam == PieceTeam.Blue) ? Color.blue : Color.red;
-        debugCube.SetActive(false);
-
-        pieceName = gameObject.name;
-
-        piece4DS = GetComponentInChildren<unity4dv.Plugin4DS>();
-        piece4DS.AutoPlay = false;
-
-        Vector3 rot = piece4DS.transform.eulerAngles;
-        if (pieceTeam == PieceTeam.Red)
-        {
-            rot.z += 180f;
-        }
-        piece4DS.transform.eulerAngles = rot;
-
+        InitializeDebugCube();
+        InitializePieceData();
+        ApplyTeamRotation();
     }
 
+    private void InitializeDebugCube()
+    {
+        if (debugCube != null)
+        {
+            Color teamColor = (pieceTeam == PieceTeam.Blue) ? Color.blue : Color.red;
+            debugCube.GetComponent<Renderer>().material.color = teamColor;
+            debugCube.SetActive(false);
+        }
+    }
+
+    private void InitializePieceData()
+    {
+        pieceName = gameObject.name;
+        piece4DS = GetComponentInChildren<unity4dv.Plugin4DS>();
+        
+        if (piece4DS != null)
+        {
+            Debug.Log($"[Init] Piece '{pieceName}' loaded with sequence: {piece4DS.SequenceName}");
+        }
+    }
+
+    private void ApplyTeamRotation()
+    {
+        if (pieceTeam == PieceTeam.Red)
+        {
+            transform.Rotate(0, 0, 180);
+            Debug.Log($"[Init] Red team piece '{pieceName}' rotated 180° on Z axis");
+        }
+    }
+    #endregion
+
+    #region Turn Management
     public void PionTurn(bool isTurn)
     {
         isSelectedToMove = isTurn;
-        debugCube.SetActive(isTurn);
-
-        GetComponent<Collider>().enabled = isTurn;
-        HighlightTiles();
-
-    }
-
-    private void HighlightTiles()
-    {
-        if (!isSelectedToMove) return;
-        foreach (ChessTile tile in GameManager.Instance.miniChessboard.chessTiles)
+        UpdateDebugCube(isTurn);
+        UpdateCollider(isTurn);
+        
+        if (isTurn)
         {
-            // Calculer le déplacement relatif depuis la position de la pièce
-            int deltaX = (int)tile.position.x - (int)boardPosition.x;
-            int deltaY = (int)tile.position.y - (int)boardPosition.y;
-
-            // Convertir en indices de la matrice shape (le centre = position de la pièce)
-            int movementShapeCenterX = movementShape.GridSize.x / 2;
-            int movementShapeCenterY = movementShape.GridSize.y / 2;
-
-            int attackShapeCenterX = attackShape.GridSize.x / 2;
-            int attackShapeCenterY = attackShape.GridSize.y / 2;
-
-            int movementShapeIndexX = movementShapeCenterX + deltaX;
-            int movementShapeIndexY = movementShapeCenterY + deltaY;
-
-            int attackShapeIndexX = attackShapeCenterX + deltaX;
-            int attackShapeIndexY = attackShapeCenterY + deltaY;
-
-            bool isInMovementShapeBounds =
-                movementShapeIndexX >= 0 && movementShapeIndexX < movementShape.GridSize.x &&
-                movementShapeIndexY >= 0 && movementShapeIndexY < movementShape.GridSize.y;
-
-            bool isInAttackShapeBounds =
-                attackShapeIndexX >= 0 && attackShapeIndexX < attackShape.GridSize.x &&
-                attackShapeIndexY >= 0 && attackShapeIndexY < attackShape.GridSize.y;
-
-            if (isInMovementShapeBounds && movementShape.GetCell(movementShapeIndexX, movementShapeIndexY))
-            {
-                tile.GetComponent<Renderer>().material.color = Color.yellow;
-                tile.Enable();
-
-                foreach (ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
-                {
-                    // BaseColor - Friendly piece on possible move tile
-                    if (piece.boardPosition == tile.position)
-                    {
-                        tile.GetComponent<Renderer>().material.color = tile.baseColor;
-                        tile.Disable();
-                    }
-                }
-            }
-
-            if (isInAttackShapeBounds && attackShape.GetCell(attackShapeIndexX, attackShapeIndexY))
-            {
-                foreach(ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
-                {
-                    // RED - Ennemy piece on possible attack tile
-                    if (piece.boardPosition == tile.position && piece.pieceTeam != this.pieceTeam)
-                    {
-                        tile.GetComponent<Renderer>().material.color = Color.red;
-                        tile.Enable();
-                    }
-
-                    // BaseColor - Friendly piece on possible move tile
-                    if (piece.boardPosition == tile.position && piece.pieceTeam == this.pieceTeam)
-                    {
-                        tile.GetComponent<Renderer>().material.color = tile.baseColor;
-                        tile.Disable();
-                    }
-                }
-            }
+            HighlightTiles();
         }
     }
+
+    private void UpdateDebugCube(bool isActive)
+    {
+        if (debugCube != null)
+        {
+            debugCube.SetActive(isActive);
+        }
+    }
+
+    private void UpdateCollider(bool isEnabled)
+    {
+        Collider collider = GetComponent<Collider>();
+        if (collider != null)
+        {
+            collider.enabled = isEnabled;
+        }
+    }
+    #endregion
+
+    #region Tile Highlighting
+    private void HighlightTiles()
+    {
+        if (!isSelectedToMove)
+        {
+            return;
+        }
+
+        foreach (ChessTile tile in GameManager.Instance.miniChessboard.chessTiles)
+        {
+            ProcessTileHighlight(tile);
+        }
+    }
+
+    private void ProcessTileHighlight(ChessTile tile)
+    {
+        Vector2Int deltaPosition = CalculateDeltaPosition(tile);
+        
+        bool canMove = CanMoveToTile(deltaPosition);
+        bool canAttack = CanAttackTile(deltaPosition);
+
+        if (canMove)
+        {
+            HighlightMovementTile(tile);
+        }
+
+        if (canAttack)
+        {
+            HighlightAttackTile(tile);
+        }
+    }
+
+    private Vector2Int CalculateDeltaPosition(ChessTile tile)
+    {
+        int deltaX = (int)tile.position.x - (int)boardPosition.x;
+        int deltaY = (int)tile.position.y - (int)boardPosition.y;
+        return new Vector2Int(deltaX, deltaY);
+    }
+
+    private bool CanMoveToTile(Vector2Int delta)
+    {
+        int shapeIndexX = (movementShape.GridSize.x / 2) + delta.x;
+        int shapeIndexY = (movementShape.GridSize.y / 2) + delta.y;
+
+        bool isInBounds = IsInBounds(shapeIndexX, shapeIndexY, movementShape.GridSize);
+        
+        if (!isInBounds)
+        {
+            return false;
+        }
+
+        return movementShape.GetCell(shapeIndexX, shapeIndexY);
+    }
+
+    private bool CanAttackTile(Vector2Int delta)
+    {
+        int shapeIndexX = (attackShape.GridSize.x / 2) + delta.x;
+        int shapeIndexY = (attackShape.GridSize.y / 2) + delta.y;
+
+        bool isInBounds = IsInBounds(shapeIndexX, shapeIndexY, attackShape.GridSize);
+        
+        if (!isInBounds)
+        {
+            return false;
+        }
+
+        return attackShape.GetCell(shapeIndexX, shapeIndexY);
+    }
+
+    private bool IsInBounds(int x, int y, Vector2Int gridSize)
+    {
+        return x >= 0 && x < gridSize.x && y >= 0 && y < gridSize.y;
+    }
+
+    private void HighlightMovementTile(ChessTile tile)
+    {
+        ChessPiece pieceAtTile = FindPieceAtTile(tile.position);
+
+        if (pieceAtTile != null && pieceAtTile.pieceTeam == this.pieceTeam)
+        {
+            // Friendly piece blocks movement
+            tile.GetComponent<Renderer>().material.color = tile.baseColor;
+            tile.Disable();
+        }
+        else if (pieceAtTile == null)
+        {
+            // Empty tile - can move here
+            tile.GetComponent<Renderer>().material.color = Color.yellow;
+            tile.Enable();
+        }
+    }
+
+    private void HighlightAttackTile(ChessTile tile)
+    {
+        ChessPiece pieceAtTile = FindPieceAtTile(tile.position);
+
+        if (pieceAtTile != null && pieceAtTile.pieceTeam != this.pieceTeam)
+        {
+            // Enemy piece - can attack
+            tile.GetComponent<Renderer>().material.color = Color.red;
+            tile.Enable();
+        }
+        else if (pieceAtTile != null && pieceAtTile.pieceTeam == this.pieceTeam)
+        {
+            // Friendly piece - cannot attack
+            tile.GetComponent<Renderer>().material.color = tile.baseColor;
+            tile.Disable();
+        }
+    }
+
+    private ChessPiece FindPieceAtTile(Vector2 tilePosition)
+    {
+        foreach (ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
+        {
+            if (piece.boardPosition == tilePosition)
+            {
+                return piece;
+            }
+        }
+        return null;
+    }
+    #endregion
 }

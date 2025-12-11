@@ -1,43 +1,64 @@
-using NUnit.Framework;
-using Oculus.Interaction;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ChessboardManager : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("Chessboard Components")]
     [SerializeField] public List<ChessTile> chessTiles = new List<ChessTile>();
     [SerializeField] public List<ChessPiece> chessPieces = new List<ChessPiece>();
-
-
     [SerializeField] public Transform chessPiecesParent;
+    #endregion
 
+    #region Constants
+    private const int BOARD_SIZE = 5;
+    private const string TILE_PREFIX = "SM_Tile";
+    private const float HIGHLIGHT_CLEANUP_DELAY = 0.2f;
+    #endregion
 
-    [Header("Teams Colors Debug")]
-    public Color redTeamColor = Color.red;
-    public Color blueTeamColor = Color.blue;
-
-
-    private ChessPiece currentChessPiece;
-
-
+    #region Unity Lifecycle
     private void Start()
     {
+        InitializeChessboard();
+        GameManager.Instance.MatchSmallAndGiantPieces();
+    }
+    #endregion
 
-        foreach(Transform child in transform)
+    #region Initialization
+    private void InitializeChessboard()
+    {
+        InitializeTiles();
+        InitializePieces();
+    }
+
+    private void InitializeTiles()
+    {
+        foreach (Transform child in transform)
         {
             ChessTile tile = child.GetComponent<ChessTile>();
             if (tile != null)
             {
-                // This is a 5x5 chessboard, each tile is named as "SM_Tile*" (from 0 to 24);
-                int index = int.Parse(child.name.Replace("SM_Tile", ""));
-                int x = index % 5;
-                int y = index / 5;
-                tile.Initialize(x, y);
+                Vector2Int tilePosition = CalculateTilePosition(child.name);
+                tile.Initialize(tilePosition.x, tilePosition.y);
                 chessTiles.Add(tile);
             }
         }
-        foreach(Transform child in chessPiecesParent)
+        
+        Debug.Log($"[{gameObject.name}] Initialized {chessTiles.Count} tiles");
+    }
+
+    private Vector2Int CalculateTilePosition(string tileName)
+    {
+        int index = int.Parse(tileName.Replace(TILE_PREFIX, ""));
+        int x = index % BOARD_SIZE;
+        int y = index / BOARD_SIZE;
+        return new Vector2Int(x, y);
+    }
+
+    private void InitializePieces()
+    {
+        foreach (Transform child in chessPiecesParent)
         {
             ChessPiece piece = child.GetComponent<ChessPiece>();
             if (piece != null)
@@ -45,84 +66,202 @@ public class ChessboardManager : MonoBehaviour
                 piece.Initialize();
                 chessPieces.Add(piece);
                 
-                // Set initial board position by finding closest tile
-                float minDistance = float.MaxValue;
-                ChessTile closestTile = null;
-                foreach (ChessTile tile in chessTiles)
-                {
-                    float distance = Vector3.Distance(piece.transform.position, tile.transform.position);
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closestTile = tile;
-                    }
-                }
-                if (closestTile != null)
-                {
-                    piece.boardPosition = closestTile.position;
-                    Debug.Log($"Chess Piece {piece.pieceName} initialized at tile ({closestTile.position.x}, {closestTile.position.y})");
-                }
+                SetInitialPieceBoardPosition(piece);
             }
         }
+        
+        Debug.Log($"[{gameObject.name}] Initialized {chessPieces.Count} pieces");
     }
 
-    public void SetCurrentChessPiece(ChessPiece piece)
+    private void SetInitialPieceBoardPosition(ChessPiece piece)
     {
-        currentChessPiece = piece;
+        ChessTile closestTile = FindClosestTile(piece.transform.position);
+        
+        if (closestTile != null)
+        {
+            piece.boardPosition = closestTile.position;
+            Debug.Log($"[Init] Piece '{piece.pieceName}' placed at board position ({closestTile.position.x}, {closestTile.position.y})");
+        }
+        else
+        {
+            Debug.LogWarning($"Could not find initial tile for piece: {piece.pieceName}");
+        }
     }
+    #endregion
 
+    #region Piece Movement
     public void UpdateChessPiecePosition(ChessPiece piece)
     {
-        if(piece.pieceName == "null")
+        if (!IsValidPiece(piece))
         {
             return;
         }
-        // The lowest distance tile of all chessTiles is considered the current tile of the piece
+
+        ChessTile targetTile = FindClosestSelectableTile(piece.transform.position);
+
+        if (targetTile != null)
+        {
+            MovePieceToTile(piece, targetTile);
+            HandlePieceCapture(piece, targetTile);
+            HandlePostMoveActions(piece);
+        }
+        else
+        {
+            Debug.LogWarning($"No valid tile found for piece: {piece.pieceName}");
+        }
+    }
+
+    private bool IsValidPiece(ChessPiece piece)
+    {
+        if (piece.pieceName == "null")
+        {
+            Debug.LogWarning("Attempted to move a null piece");
+            return false;
+        }
+        return true;
+    }
+
+    private void MovePieceToTile(ChessPiece piece, ChessTile tile)
+    {
+        piece.boardPosition = tile.position;
+        Debug.Log($"[Move] '{piece.pieceName}' moved to ({tile.position.x}, {tile.position.y})");
+    }
+
+    private void HandlePieceCapture(ChessPiece movingPiece, ChessTile targetTile)
+    {
+        if (!IsCaptureMove(targetTile))
+        {
+            return;
+        }
+
+        ChessPiece capturedPiece = FindEnemyPieceAt(movingPiece, targetTile.position);
+        
+        if (capturedPiece != null)
+        {
+            CapturePiece(movingPiece, capturedPiece);
+        }
+    }
+
+    private bool IsCaptureMove(ChessTile tile)
+    {
+        return tile.GetComponent<Renderer>().material.color == Color.red;
+    }
+
+    private ChessPiece FindEnemyPieceAt(ChessPiece attackingPiece, Vector2 position)
+    {
+        foreach (ChessPiece piece in chessPieces)
+        {
+            bool isEnemy = piece.pieceTeam != attackingPiece.pieceTeam;
+            bool isAtPosition = piece.boardPosition == position;
+            
+            if (isEnemy && isAtPosition)
+            {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    private void CapturePiece(ChessPiece attacker, ChessPiece victim)
+    {
+        Debug.Log($"[Capture] '{attacker.pieceName}' captured '{victim.pieceName}'!");
+        
+        victim.gameObject.SetActive(false);
+        chessPieces.Remove(victim);
+    }
+
+    private void HandlePostMoveActions(ChessPiece piece)
+    {
+        PlayPieceAnimation(piece);
+        SyncWithGiantBoard(piece);
+        CleanupAndStartNextTurn();
+    }
+
+    private void PlayPieceAnimation(ChessPiece piece)
+    {
+        if (piece.piece4DS != null)
+        {
+            piece.piece4DS.Play(true);
+        }
+    }
+
+    private void SyncWithGiantBoard(ChessPiece piece)
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SyncGiantChessboard(piece);
+        }
+    }
+
+    private void CleanupAndStartNextTurn()
+    {
+        StartCoroutine(CleanChessboardHighlight(HIGHLIGHT_CLEANUP_DELAY));
+        StartCoroutine(GameManager.Instance.WaitAndNextTurn(2.0f));
+    }
+    #endregion
+
+    #region Tile Helpers
+    private ChessTile FindClosestTile(Vector3 worldPosition)
+    {
         float minDistance = float.MaxValue;
         ChessTile closestTile = null;
+
         foreach (ChessTile tile in chessTiles)
         {
-            float distance = Vector3.Distance(piece.transform.position, tile.transform.position);
-            if (distance < minDistance && tile.isSelectable)
+            float distance = Vector3.Distance(worldPosition, tile.transform.position);
+            
+            if (distance < minDistance)
             {
                 minDistance = distance;
                 closestTile = tile;
             }
         }
-        if (closestTile != null)
+
+        return closestTile;
+    }
+
+    private ChessTile FindClosestSelectableTile(Vector3 worldPosition)
+    {
+        float minDistance = float.MaxValue;
+        ChessTile closestTile = null;
+
+        foreach (ChessTile tile in chessTiles)
         {
-            piece.boardPosition = closestTile.position;
-            Debug.Log($"Chess Piece {piece.pieceName} is now on tile ({closestTile.position.x}, {closestTile.position.y})");
-
-
-            if(closestTile.GetComponent<Renderer>().material.color == Color.red)
+            if (!tile.isSelectable)
             {
-                foreach(ChessPiece ennemy in chessPieces)
-                {
-                    if(ennemy.pieceTeam != piece.pieceTeam && ennemy.boardPosition == closestTile.position)
-                    {
-                        Debug.Log($"Chess Piece {piece.pieceName} captured {ennemy.pieceName}!");
-                        ennemy.gameObject.SetActive(false);
-                        // Optionally, remove the captured piece from the chessPieces list
-                         chessPieces.Remove(ennemy);
-                        break;
-                    }
-                }
+                continue;
             }
-            piece.piece4DS.Play(true);
-            StartCoroutine(CleanChessboardHighlight(0.2f));
-            StartCoroutine(GameManager.Instance.WaitAndNextTurn(2.0f));
+
+            float distance = Vector3.Distance(worldPosition, tile.transform.position);
+            
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestTile = tile;
+            }
         }
+
+        return closestTile;
     }
 
     public IEnumerator CleanChessboardHighlight(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+        
         foreach (ChessTile tile in chessTiles)
         {
             tile.GetComponent<Renderer>().material.color = tile.baseColor;
             tile.Disable();
         }
     }
+    #endregion
 
+    #region Legacy (Keep for compatibility)
+    private ChessPiece currentChessPiece;
+
+    public void SetCurrentChessPiece(ChessPiece piece)
+    {
+        currentChessPiece = piece;
+    }
+    #endregion
 }
