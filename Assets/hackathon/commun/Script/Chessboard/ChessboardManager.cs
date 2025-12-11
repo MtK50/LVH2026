@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Oculus.Interaction;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +10,13 @@ public class ChessboardManager : MonoBehaviour
     [SerializeField] public List<ChessPiece> chessPieces = new List<ChessPiece>();
 
 
-    [SerializeField] public List<ChessTile> possibleChessTiles = new List<ChessTile>();
     [SerializeField] public Transform chessPiecesParent;
+
+
+    [Header("Teams Colors Debug")]
+    public Color redTeamColor = Color.red;
+    public Color blueTeamColor = Color.blue;
+
 
     private ChessPiece currentChessPiece;
 
@@ -38,6 +44,24 @@ public class ChessboardManager : MonoBehaviour
             {
                 piece.Initialize();
                 chessPieces.Add(piece);
+                
+                // Set initial board position by finding closest tile
+                float minDistance = float.MaxValue;
+                ChessTile closestTile = null;
+                foreach (ChessTile tile in chessTiles)
+                {
+                    float distance = Vector3.Distance(piece.transform.position, tile.transform.position);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestTile = tile;
+                    }
+                }
+                if (closestTile != null)
+                {
+                    piece.boardPosition = closestTile.position;
+                    Debug.Log($"Chess Piece {piece.pieceName} initialized at tile ({closestTile.position.x}, {closestTile.position.y})");
+                }
             }
         }
     }
@@ -85,7 +109,20 @@ public class ChessboardManager : MonoBehaviour
                     }
                 }
             }
+            piece.piece4DS.Play(true);
+            StartCoroutine(CleanChessboardHighlight(0.2f));
             StartCoroutine(GameManager.Instance.WaitAndNextTurn(2.0f));
         }
     }
+
+    public IEnumerator CleanChessboardHighlight(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        foreach (ChessTile tile in chessTiles)
+        {
+            tile.GetComponent<Renderer>().material.color = tile.baseColor;
+            tile.Disable();
+        }
+    }
+
 }

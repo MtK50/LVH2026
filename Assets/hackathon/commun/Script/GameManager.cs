@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    private ChessPiece lastSelectedPiece;
+    private ChessPiece lastSelectedPiece = null;
     private bool isBlueTurn = true;
 
 
@@ -34,13 +34,14 @@ public class GameManager : MonoBehaviour
         ChessPiece selectedPion = miniChessboard.chessPieces[Random.Range(0, miniChessboard.chessPieces.Count)];
         if(selectedPion == null || selectedPion.pieceName == "null") { return; }
 
-
-        Debug.Log($"lastSelected {lastSelectedPiece}/selected {selectedPion}/ Count: {miniChessboard.chessPieces.Count}");
-        if(lastSelectedPiece == selectedPion && miniChessboard.chessPieces.Count != 1)
+        if(lastSelectedPiece != null )
         {
-
-            MakePionPlayMove(); 
-            return;
+            if ((lastSelectedPiece == selectedPion || lastSelectedPiece?.pieceTeam == selectedPion.pieceTeam) 
+                && miniChessboard.chessPieces.Count != 1)
+            {
+                MakePionPlayMove();
+                return;
+            }
         }
         
         foreach(ChessTile tile in miniChessboard.chessTiles)
@@ -68,6 +69,10 @@ public class GameManager : MonoBehaviour
     public IEnumerator WaitAndNextTurn(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
+        foreach (ChessPiece piece in miniChessboard.chessPieces)
+        {
+            piece.piece4DS.Play(false);
+        }
         isBlueTurn = !isBlueTurn;
         MakePionPlayMove();
     }

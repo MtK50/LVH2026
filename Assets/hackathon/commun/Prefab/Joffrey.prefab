@@ -1137,6 +1137,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e014c6afd5e53064e96169d4424ac6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChessPiece
+  isSelectedToMove: 0
+  boardPosition: {x: 0, y: 0}
+  debugCube: {fileID: 0}
+  movementShape:
+    gridSize: {x: 3, y: 3}
+    cellSize: {x: 16, y: 16}
+    cells:
+    - row: 000000
+    - row: 000000
+    - row: 000000
+  attackShape:
+    gridSize: {x: 3, y: 3}
+    cellSize: {x: 16, y: 16}
+    cells:
+    - row: 000000
+    - row: 000000
+    - row: 000000
   pieceName: 
   piece4DS: {fileID: 0}
   pieceType: 7

@@ -1,6 +1,9 @@
 using Array2DEditor;
+using Oculus.Platform.Models;
+using TreeEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.Rendering.ProbeAdjustmentVolume;
 
 public enum PieceType
 {
@@ -28,7 +31,8 @@ public class ChessPiece : MonoBehaviour
     public GameObject debugCube;
     [Space(10)]
     // Create a 5x5 matrix of bool to represent possible moves
-    [SerializeField] private Array2DBool shape = null;
+    [SerializeField] private Array2DBool movementShape = null;
+    [SerializeField] private Array2DBool attackShape = null;
 
 
     [Space(10)]
@@ -47,12 +51,21 @@ public class ChessPiece : MonoBehaviour
 
     public void Initialize()
     {
+        debugCube.GetComponent<Renderer>().material.color = (pieceTeam == PieceTeam.Blue) ? Color.blue : Color.red;
         debugCube.SetActive(false);
 
         pieceName = gameObject.name;
 
         piece4DS = GetComponentInChildren<unity4dv.Plugin4DS>();
-        Debug.Log(piece4DS.SequenceName);
+        piece4DS.AutoPlay = false;
+
+        Vector3 rot = piece4DS.transform.eulerAngles;
+        if (pieceTeam == PieceTeam.Red)
+        {
+            rot.z += 180f;
+        }
+        piece4DS.transform.eulerAngles = rot;
+
     }
 
     public void PionTurn(bool isTurn)
@@ -61,17 +74,13 @@ public class ChessPiece : MonoBehaviour
         debugCube.SetActive(isTurn);
 
         GetComponent<Collider>().enabled = isTurn;
-
-        HighlightPossibleMove();
+        HighlightTiles();
 
     }
-    private void HighlightPossibleMove()
+
+    private void HighlightTiles()
     {
-        // Ne surligner que si cette pièce est sélectionnée
         if (!isSelectedToMove) return;
-
-        GameManager.Instance.miniChessboard.possibleChessTiles.Clear();
-
         foreach (ChessTile tile in GameManager.Instance.miniChessboard.chessTiles)
         {
             // Calculer le déplacement relatif depuis la position de la pièce
@@ -79,46 +88,60 @@ public class ChessPiece : MonoBehaviour
             int deltaY = (int)tile.position.y - (int)boardPosition.y;
 
             // Convertir en indices de la matrice shape (le centre = position de la pièce)
-            int shapeX = deltaX + shape.GridSize.x / 2;
-            int shapeY = deltaY + shape.GridSize.y / 2;
+            int movementShapeCenterX = movementShape.GridSize.x / 2;
+            int movementShapeCenterY = movementShape.GridSize.y / 2;
 
-            // Vérifier si ce déplacement est dans les limites de la matrice shape
-            bool isInShapeBounds = shapeX >= 0 && shapeX < shape.GridSize.x && 
-                                    shapeY >= 0 && shapeY < shape.GridSize.y;
+            int attackShapeCenterX = attackShape.GridSize.x / 2;
+            int attackShapeCenterY = attackShape.GridSize.y / 2;
 
-            // Surligner uniquement les mouvements valides
-            if (isInShapeBounds && shape.GetCell(shapeX, shapeY))
+            int movementShapeIndexX = movementShapeCenterX + deltaX;
+            int movementShapeIndexY = movementShapeCenterY + deltaY;
+
+            int attackShapeIndexX = attackShapeCenterX + deltaX;
+            int attackShapeIndexY = attackShapeCenterY + deltaY;
+
+            bool isInMovementShapeBounds =
+                movementShapeIndexX >= 0 && movementShapeIndexX < movementShape.GridSize.x &&
+                movementShapeIndexY >= 0 && movementShapeIndexY < movementShape.GridSize.y;
+
+            bool isInAttackShapeBounds =
+                attackShapeIndexX >= 0 && attackShapeIndexX < attackShape.GridSize.x &&
+                attackShapeIndexY >= 0 && attackShapeIndexY < attackShape.GridSize.y;
+
+            if (isInMovementShapeBounds && movementShape.GetCell(movementShapeIndexX, movementShapeIndexY))
             {
-
                 tile.GetComponent<Renderer>().material.color = Color.yellow;
-                //tile.centerPosition.SetActive(true);
                 tile.Enable();
 
-
-                if (tile.position == boardPosition)
+                foreach (ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
                 {
-                    tile.GetComponent<Renderer>().material.color = Color.green;
-                }
-                foreach(ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
-                {
-                    if(piece.boardPosition == tile.position)
+                    // BaseColor - Friendly piece on possible move tile
+                    if (piece.boardPosition == tile.position)
                     {
-                        // RED - Ennemy piece on possible move tile
-                        if (piece.pieceTeam != this.pieceTeam)
-                        {
-                            tile.GetComponent<Renderer>().material.color = Color.red;
-                        }
-
-                        // BaseColor - Friendly piece on possible move tile
-                        if (piece.pieceTeam == this.pieceTeam)
-                        {
-                            tile.GetComponent<Renderer>().material.color = tile.baseColor;
-                            //tile.centerPosition.SetActive(false);
-                            tile.Disable();
-                        }
+                        tile.GetComponent<Renderer>().material.color = tile.baseColor;
+                        tile.Disable();
                     }
                 }
-                GameManager.Instance.miniChessboard.possibleChessTiles.Add(tile);
+            }
+
+            if (isInAttackShapeBounds && attackShape.GetCell(attackShapeIndexX, attackShapeIndexY))
+            {
+                foreach(ChessPiece piece in GameManager.Instance.miniChessboard.chessPieces)
+                {
+                    // RED - Ennemy piece on possible attack tile
+                    if (piece.boardPosition == tile.position && piece.pieceTeam != this.pieceTeam)
+                    {
+                        tile.GetComponent<Renderer>().material.color = Color.red;
+                        tile.Enable();
+                    }
+
+                    // BaseColor - Friendly piece on possible move tile
+                    if (piece.boardPosition == tile.position && piece.pieceTeam == this.pieceTeam)
+                    {
+                        tile.GetComponent<Renderer>().material.color = tile.baseColor;
+                        tile.Disable();
+                    }
+                }
             }
         }
     }
