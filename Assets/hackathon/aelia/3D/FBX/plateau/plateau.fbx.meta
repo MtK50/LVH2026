@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 8e050fad05d31d4478f3e376b3dfa9d1
+guid: 5643cb0290ca2494890f4fc09ff3ee5e
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile0
-    second: {fileID: 2100000, guid: 04e67a63ac100634abe432f9796eceda, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -17,18 +12,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile10
-    second: {fileID: 2100000, guid: 846d32e9929ebe0459e748e4456c5ea3, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: M_Tile11
     second: {fileID: 2100000, guid: 5b3bd59398199184db66caebbf0318ea, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile12
-    second: {fileID: 2100000, guid: da01cae82d661ef41b7b72e915e317c6, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -37,18 +22,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile14
-    second: {fileID: 2100000, guid: 5eab542c4c8ffe44dac2b4c16427d021, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: M_Tile15
     second: {fileID: 2100000, guid: d778bd145ba68624498ac3240fe59017, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile16
-    second: {fileID: 2100000, guid: 71abb0807aa50ca428fef017aebbe102, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -57,23 +32,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile18
-    second: {fileID: 2100000, guid: 1ce5df0727707b44f8868b9063bca3e1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: M_Tile19
     second: {fileID: 2100000, guid: ad6e6c418611e6340a928a3e144d446b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile2
-    second: {fileID: 2100000, guid: e4ee8a05771ef59419e9ddb4df3b6156, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile20
-    second: {fileID: 2100000, guid: 41893bffe311a814b929eb6808a67acf, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -82,18 +42,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile22
-    second: {fileID: 2100000, guid: 30b4f89749767484fbbeb9743e204a35, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: M_Tile23
     second: {fileID: 2100000, guid: d9bbcef8c15f08d46b8c1e4a54e27b03, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile24
-    second: {fileID: 2100000, guid: ac48eadd368230e489a9fad7cd771b95, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -102,18 +52,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile4
-    second: {fileID: 2100000, guid: c5fbe936eefc88740be7339aaa91c8fd, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: M_Tile5
     second: {fileID: 2100000, guid: 2d6e20122b36995429856c3460a041c1, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: M_Tile6
-    second: {fileID: 2100000, guid: c44c59eeae36d0e4594f822ef1b6d901, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -122,13 +62,73 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile8
-    second: {fileID: 2100000, guid: 17b07cdd95cfb9c42981f34461a5a563, type: 2}
+      name: M_Tile9
+    second: {fileID: 2100000, guid: 51ff1dac167b29d4fae6aa479fd5eec9, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_Tile9
-    second: {fileID: 2100000, guid: 51ff1dac167b29d4fae6aa479fd5eec9, type: 2}
+      name: SM_Tile0_black
+    second: {fileID: 2100000, guid: 5812de7281690a145938ca1df20a5a78, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile10_black
+    second: {fileID: 2100000, guid: 462f0f3a591a90b4bbc6359c88ab1547, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile12_black
+    second: {fileID: 2100000, guid: ee64f164cd5d0684896c42ab386d3c0a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile14_black
+    second: {fileID: 2100000, guid: a75d0558dbc60444abb238936754dbd8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile16_black
+    second: {fileID: 2100000, guid: d7b0a07c44d92bb4daf8d266828107ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile18_black
+    second: {fileID: 2100000, guid: 2bdf2af0311dd9140812d35c2e53e059, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile20_black
+    second: {fileID: 2100000, guid: 7ad5878ec841067408f69a11bc53fae4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile22_black
+    second: {fileID: 2100000, guid: b987b48f0a8d55642b5cec9c57881a20, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile24_black
+    second: {fileID: 2100000, guid: e80a16b1ad217ed40b95d7ff89687f99, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile2_black
+    second: {fileID: 2100000, guid: ff53f9cb6be0ba4438d3ee62b42a39ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile4_black
+    second: {fileID: 2100000, guid: eb28622e0dee19449a03026cc6decbbf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile6_black
+    second: {fileID: 2100000, guid: b5b58fa04cd93e84c8d13f1d868fbd9b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: SM_Tile8_black
+    second: {fileID: 2100000, guid: 547592f6041489f4f98f37cb9f487a41, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
