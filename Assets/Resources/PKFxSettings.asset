@@ -285,8 +285,8 @@ MonoBehaviour:
   m_EnableHotreloadInPlayMode: 0
   m_UseHashesAsMaterialName: 1
   m_EnableForceDeterminism: 0
-  m_PopcornPackFxPath: ../../UnityContentExample/Unity
-  m_UnityPackFxPath: /PopcornFXAssets
+  m_PopcornPackFxPath: ../Particle/PopcornFX
+  m_UnityPackFxPath: /rnFX
   m_EnableAssetPlatformVersion: 1
   m_CurrentPlatform: 5
   m_QualityVersionNames:
