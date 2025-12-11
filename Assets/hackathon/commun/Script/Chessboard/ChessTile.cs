@@ -4,11 +4,28 @@ public class ChessTile : MonoBehaviour
 {
  
     public Vector2 position;
-
+    public Color baseColor;
+    public GameObject centerPosition;
+    public bool isSelectable = false;
 
     public void Initialize(int xpos, int ypos)
     {
         position = new Vector2(xpos, ypos);
+        baseColor = GetComponent<Renderer>().material.color;
+        centerPosition = transform.GetChild(0).gameObject;
+    }
+
+
+    public void Enable()
+    {
+        centerPosition.SetActive(true);
+        isSelectable = true;
+    }
+
+    public void Disable()
+    {
+        centerPosition.SetActive(false);
+        isSelectable = false;
     }
 
     //public void OnGUI()

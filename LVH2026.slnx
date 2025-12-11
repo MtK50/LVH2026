@@ -1,6 +1,8 @@
 ﻿<Solution>
   <Project Path="Unity.PopcornFX.Runtime.csproj" />
   <Project Path="Unity.PopcornFX.Samples.Editor.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
   <Project Path="Unity.PopcornFX.Editor.csproj" />
   <Project Path="Unity.PopcornFX.Samples.Runtime.csproj" />
   <Project Path="4DViews.4DSPlayer.Editor.csproj" />

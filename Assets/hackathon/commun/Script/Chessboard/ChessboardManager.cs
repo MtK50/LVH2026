@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Oculus.Interaction;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public class ChessboardManager : MonoBehaviour
     [SerializeField] public List<ChessTile> chessTiles = new List<ChessTile>();
     [SerializeField] public List<ChessPiece> chessPieces = new List<ChessPiece>();
 
+
+    [SerializeField] public List<ChessTile> possibleChessTiles = new List<ChessTile>();
     [SerializeField] public Transform chessPiecesParent;
 
     private ChessPiece currentChessPiece;
@@ -56,7 +59,7 @@ public class ChessboardManager : MonoBehaviour
         foreach (ChessTile tile in chessTiles)
         {
             float distance = Vector3.Distance(piece.transform.position, tile.transform.position);
-            if (distance < minDistance)
+            if (distance < minDistance && tile.isSelectable)
             {
                 minDistance = distance;
                 closestTile = tile;
@@ -66,7 +69,23 @@ public class ChessboardManager : MonoBehaviour
         {
             piece.boardPosition = closestTile.position;
             Debug.Log($"Chess Piece {piece.pieceName} is now on tile ({closestTile.position.x}, {closestTile.position.y})");
+
+
+            if(closestTile.GetComponent<Renderer>().material.color == Color.red)
+            {
+                foreach(ChessPiece ennemy in chessPieces)
+                {
+                    if(ennemy.pieceTeam != piece.pieceTeam && ennemy.boardPosition == closestTile.position)
+                    {
+                        Debug.Log($"Chess Piece {piece.pieceName} captured {ennemy.pieceName}!");
+                        ennemy.gameObject.SetActive(false);
+                        // Optionally, remove the captured piece from the chessPieces list
+                         chessPieces.Remove(ennemy);
+                        break;
+                    }
+                }
+            }
+            StartCoroutine(GameManager.Instance.WaitAndNextTurn(2.0f));
         }
     }
-
 }
