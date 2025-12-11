@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/09_Grids.unity
     guid: 16aa59cf233f66b4ab4b90c80505808f
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: b7bd825df5a9bff42a4bd4e878952e2d, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 50f38f000432b524c87da1fb806df9c6, type: 2}
+  m_UseUCBPForAssetBundles: 0
