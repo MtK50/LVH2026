@@ -370,7 +370,20 @@ public class GameManager : MonoBehaviour
     {
         if (giantPiece.piece4DS != null)
         {
-            giantPiece.piece4DS.Play(true);
+
+            if(giantPiece.pieceType == PieceType.Bomber)
+            {
+                TestAnim testAnim = giantPiece.GetComponentInChildren<TestAnim>();
+                if (testAnim != null)
+                {
+                    testAnim.StartCoroutine(testAnim.CouroutineAnimation());
+                }
+            } 
+            else
+            {
+                giantPiece.piece4DS.Play(true);
+
+            }
             Debug.Log($"[Animation] Playing giant piece '{giantPiece.pieceName}' animation for {GIANT_ANIMATION_DURATION} seconds");
             
             yield return new WaitForSeconds(GIANT_ANIMATION_DURATION);

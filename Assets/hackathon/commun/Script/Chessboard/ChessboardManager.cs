@@ -175,9 +175,18 @@ public class ChessboardManager : MonoBehaviour
 
     private void PlayPieceAnimation(ChessPiece piece)
     {
-        if (piece.piece4DS != null)
+        if (piece.pieceType == PieceType.Bomber)
+        {
+            TestAnim testAnim = piece.GetComponentInChildren<TestAnim>();
+            if (testAnim != null)
+            {
+                testAnim.StartCoroutine(testAnim.CouroutineAnimation());
+            }
+        }
+        else
         {
             piece.piece4DS.Play(true);
+
         }
     }
 
