@@ -109,14 +109,14 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _FireBandWidht: 7.72
+    - _FireBandWidht: 7.92
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 3
-    - _MultiplyEmissive: 7.2
-    - _Noise_Scale: 138.11
+    - _MultiplyEmissive: 100
+    - _Noise_Scale: 137.72
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueControl: 0
@@ -137,7 +137,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FireColor: {r: 0.764151, g: 0.36982363, b: 0.075694196, a: 1}
+    - _FireColor: {r: 0.7647059, g: 0.22840676, b: 0.07450979, a: 1}
     - _ScrollDirection: {r: 0, g: 0.25, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
