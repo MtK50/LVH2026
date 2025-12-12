@@ -242,6 +242,7 @@ public class GameManager : MonoBehaviour
             {
                 piece.piece4DS.Play(false);
                 piece.piece4DS.GoToFrame(piece.piece4DS.FirstActiveFrame);
+
             }
         }
     }
@@ -370,15 +371,46 @@ public class GameManager : MonoBehaviour
     {
         if (giantPiece.piece4DS != null)
         {
-            giantPiece.piece4DS.Play(true);
-            Debug.Log($"[Animation] Playing giant piece '{giantPiece.pieceName}' animation for {GIANT_ANIMATION_DURATION} seconds");
-            
-            yield return new WaitForSeconds(GIANT_ANIMATION_DURATION);
-            
-            giantPiece.piece4DS.Play(false);
-            giantPiece.piece4DS.GoToFrame(giantPiece.piece4DS.FirstActiveFrame);
+            if (giantPiece.pieceType == PieceType.Fireblast)
+            {
+                DeflagrationVFX dvfx = giantPiece.GetComponentInChildren<DeflagrationVFX>();
+                if (dvfx != null)
+                {
+                    dvfx.StartCoroutine(dvfx.ShowVFXEffectDeflagration());
 
-            Debug.Log($"[Animation] Stopped giant piece '{giantPiece.pieceName}' animation");
+                }
+            }
+            if (giantPiece.pieceType == PieceType.Parpaing)
+            {
+                BriqueVFX bvfx = giantPiece.GetComponentInChildren<BriqueVFX>();
+                if (bvfx != null)
+                {
+                    bvfx.StartCoroutine(bvfx.ShowVFXBrique());
+                }
+            }
+
+            if (giantPiece.pieceType == PieceType.PierreFeuilleCiseaux)
+            {
+                CiseauVFX cvfx = giantPiece.GetComponentInChildren<CiseauVFX>();
+                if (cvfx != null)
+                {
+                    cvfx.StartCoroutine(cvfx.ShowVFXCiseaux());
+                }
+            }
+            if ((giantPiece.pieceType != PieceType.Parpaing) && 
+                (giantPiece.pieceType != PieceType.Fireblast))
+            {
+                giantPiece.piece4DS.Play(true);
+                Debug.Log($"[Animation] Playing giant piece '{giantPiece.pieceName}' animation for {GIANT_ANIMATION_DURATION} seconds");
+            
+                yield return new WaitForSeconds(GIANT_ANIMATION_DURATION);
+            
+                giantPiece.piece4DS.Play(false);
+                giantPiece.piece4DS.GoToFrame(giantPiece.piece4DS.FirstActiveFrame);
+
+                Debug.Log($"[Animation] Stopped giant piece '{giantPiece.pieceName}' animation");
+            }
+
         }
     }
     #endregion
