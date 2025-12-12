@@ -371,6 +371,13 @@ public class GameManager : MonoBehaviour
     {
         if (giantPiece.piece4DS != null)
         {
+            AudioSource audioSourceAttack = giantPiece.attackSound;
+            if (audioSourceAttack != null)
+            {
+                audioSourceAttack.Stop();
+                audioSourceAttack.Play();
+            }
+
             if (giantPiece.pieceType == PieceType.Fireblast)
             {
                 DeflagrationVFX dvfx = giantPiece.GetComponentInChildren<DeflagrationVFX>();

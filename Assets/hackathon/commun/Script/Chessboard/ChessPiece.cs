@@ -26,6 +26,8 @@ public class ChessPiece : MonoBehaviour
     public bool isSelectedToMove = false;
     public Vector2 boardPosition;
     public GameObject debugCube;
+    public AudioSource moveSound;
+    public AudioSource attackSound;
 
     [Space(10)]
     [SerializeField] private Array2DBool movementShape = null;

@@ -102,6 +102,7 @@ public class ChessboardManager : MonoBehaviour
 
         if (targetTile != null)
         {
+            AudioSourceMouvement(piece);
             MovePieceToTile(piece, targetTile);
             HandlePieceCapture(piece, targetTile);
             HandlePostMoveActions(piece);
@@ -112,6 +113,16 @@ public class ChessboardManager : MonoBehaviour
         }
     }
 
+
+    private void AudioSourceMouvement(ChessPiece piece)
+    {
+        AudioSource audioSourceMovement = piece.GetComponent<AudioSource>();
+        if (audioSourceMovement != null)
+        {
+            audioSourceMovement.Stop();
+            audioSourceMovement.Play();
+        }
+    }
 
     private void MovePieceToTile(ChessPiece piece, ChessTile tile)
     {
@@ -179,6 +190,7 @@ public class ChessboardManager : MonoBehaviour
         {
             piece.piece4DS.Play(true);
         }
+
 
         if (piece.pieceType == PieceType.Fireblast)
         {
