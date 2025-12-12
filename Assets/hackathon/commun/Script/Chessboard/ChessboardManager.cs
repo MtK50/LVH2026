@@ -179,6 +179,38 @@ public class ChessboardManager : MonoBehaviour
         {
             piece.piece4DS.Play(true);
         }
+
+        if (piece.pieceType == PieceType.Fireblast)
+        {
+            DeflagrationVFX dvfx = piece.GetComponentInChildren<DeflagrationVFX>();
+            if (dvfx != null)
+            {
+                dvfx.StartCoroutine(dvfx.ShowVFXEffectDeflagration());
+            }
+        }
+        if (piece.pieceType == PieceType.Parpaing)
+        {
+            BriqueVFX bvfx = piece.GetComponentInChildren<BriqueVFX>();
+            if (bvfx != null)
+            {
+                bvfx.StartCoroutine(bvfx.ShowVFXBrique());
+            }
+        }
+        if(piece.pieceType == PieceType.PierreFeuilleCiseaux)
+        {
+            CiseauVFX cvfx = piece.GetComponentInChildren<CiseauVFX>();
+            if (cvfx != null)
+            {
+                cvfx.StartCoroutine(cvfx.ShowVFXCiseaux());
+            }
+        }
+        if((piece.pieceType != PieceType.Parpaing) && 
+            (piece.pieceType != PieceType.Fireblast) &&
+            (piece.pieceType != PieceType.PierreFeuilleCiseaux))
+        {
+            piece.piece4DS.Play(true);
+
+        }
     }
 
     private void CleanupAndStartNextTurn()
