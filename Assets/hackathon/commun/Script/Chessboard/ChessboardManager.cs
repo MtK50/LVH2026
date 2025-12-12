@@ -92,8 +92,9 @@ public class ChessboardManager : MonoBehaviour
     #region Piece Movement
     public void UpdateChessPiecePosition(ChessPiece piece)
     {
-        if (!IsValidPiece(piece))
+        if (piece.pieceName == "null")
         {
+            Debug.LogWarning("Attempted to move a null piece");
             return;
         }
 
@@ -111,15 +112,6 @@ public class ChessboardManager : MonoBehaviour
         }
     }
 
-    private bool IsValidPiece(ChessPiece piece)
-    {
-        if (piece.pieceName == "null")
-        {
-            Debug.LogWarning("Attempted to move a null piece");
-            return false;
-        }
-        return true;
-    }
 
     private void MovePieceToTile(ChessPiece piece, ChessTile tile)
     {
@@ -166,6 +158,9 @@ public class ChessboardManager : MonoBehaviour
     {
         Debug.Log($"[Capture] '{attacker.pieceName}' captured '{victim.pieceName}'!");
         
+        // Sync the capture to the giant chessboard before removing from mini board
+        GameManager.Instance.RemovePieceFromGiantChessboard(victim);
+        
         victim.gameObject.SetActive(false);
         chessPieces.Remove(victim);
     }
@@ -173,7 +168,8 @@ public class ChessboardManager : MonoBehaviour
     private void HandlePostMoveActions(ChessPiece piece)
     {
         PlayPieceAnimation(piece);
-        SyncWithGiantBoard(piece);
+        //SyncWithGiantBoard(piece);
+        GameManager.Instance.SyncGiantChessboard(piece);
         CleanupAndStartNextTurn();
     }
 
@@ -182,14 +178,6 @@ public class ChessboardManager : MonoBehaviour
         if (piece.piece4DS != null)
         {
             piece.piece4DS.Play(true);
-        }
-    }
-
-    private void SyncWithGiantBoard(ChessPiece piece)
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.SyncGiantChessboard(piece);
         }
     }
 
