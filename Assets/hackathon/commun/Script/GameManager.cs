@@ -1,3 +1,4 @@
+using Oculus.Platform.Models;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -240,6 +241,7 @@ public class GameManager : MonoBehaviour
             if (piece.piece4DS != null)
             {
                 piece.piece4DS.Play(false);
+                piece.piece4DS.GoToFrame(piece.piece4DS.FirstActiveFrame);
             }
         }
     }
@@ -268,6 +270,45 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning($"No matching giant piece found in lookup for: {smallPiece.pieceName}");
+        }
+    }
+
+    public void RemovePieceFromGiantChessboard(ChessPiece smallPiece)
+    {
+        if (smallPiece == null)
+        {
+            Debug.LogError("Cannot remove: Small piece is null!");
+            return;
+        }
+
+        if (bigChessboard == null)
+        {
+            Debug.LogWarning("Cannot remove: Giant chessboard is not assigned!");
+            return;
+        }
+
+        // Find the matching giant piece using the lookup dictionary
+        if (smallToGiantPieceLookup.TryGetValue(smallPiece, out ChessPiece giantPiece))
+        {
+            Debug.Log($"[Remove] Removing giant piece '{giantPiece.pieceName}' from giant chessboard");
+            
+            // Remove from the giant chessboard's piece list
+            bigChessboard.chessPieces.Remove(giantPiece);
+            
+            // Deactivate the giant piece GameObject
+            giantPiece.gameObject.SetActive(false);
+            
+            // Remove from the lookup dictionary
+            smallToGiantPieceLookup.Remove(smallPiece);
+            
+            // Remove from matched pieces list
+            matchedPieces.RemoveAll(match => match.smallPiece == smallPiece);
+            
+            Debug.Log($"[Remove] Giant piece '{giantPiece.pieceName}' successfully removed and deactivated");
+        }
+        else
+        {
+            Debug.LogWarning($"No matching giant piece found in lookup for captured piece: {smallPiece.pieceName}");
         }
     }
 
@@ -335,6 +376,8 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(GIANT_ANIMATION_DURATION);
             
             giantPiece.piece4DS.Play(false);
+            giantPiece.piece4DS.GoToFrame(giantPiece.piece4DS.FirstActiveFrame);
+
             Debug.Log($"[Animation] Stopped giant piece '{giantPiece.pieceName}' animation");
         }
     }
